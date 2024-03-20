@@ -19,20 +19,20 @@ db()
 
 // Utilisation du middleware CORS pour autoriser les requêtes cross-origin
 const cors = require("cors");
-const { verifyToken } = require('./middlewares');
+// const { verifyToken } = require('./middlewares');
 app.use(cors());
 
 // Middleware de vérification du token JWT sur toutes les routes, sauf /login et /auth_login
 // app.use(verifyToken);
 
-app.get("/", (req, res) => {
+// app.get("/", (req, res) => {
 
-    res.render("index")
-})
-app.get("/login", (req, res) => {
+//     res.render("index")
+// })
+// app.get("/login", (req, res) => {
 
-    res.render("login")
-})
+//     res.render("login")
+// })
 
 app.use('/api', router)
 
