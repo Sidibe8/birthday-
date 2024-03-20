@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            margin-bottom: 20px;
+            width: 200px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Enter your name" required>
+            <br>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            let username = document.getElementById("username").value.trim();
+            if (username) {
+                // Store username in a cookie with expiry time
+                document.cookie = `username=${encodeURIComponent(username)}; path=/; secure; SameSite=Strict`;
+
+                // Call function to send data to backend
+                sendDataToBackend(username);
+            } else {
+                alert("Please enter your name.");
+            }
+        });
+
+        function sendDataToBackend(username) {
+            // Assuming you have an API endpoint to send user data
+            fetch("http://127.0.0.1:9000/api/users", { // Replace with appropriate backend URL
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username: username })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Handle response from backend
+                    console.log(data); // Les données de l'utilisateur créé
+                    // Vous pouvez effectuer d'autres actions avec les données, par exemple, afficher un message à l'utilisateur
+
+                    // Redirect to home page or perform any other actions
+                    window.location.href = "/"; // Change the URL to your home page
+                })
+                .catch(error => console.error("Error sending data to backend:", error));
+        }
+    </script>
+</body>
+
+</html>
