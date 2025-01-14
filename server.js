@@ -20,7 +20,19 @@ db()
 // Utilisation du middleware CORS pour autoriser les requêtes cross-origin
 const cors = require("cors");
 // const { verifyToken } = require('./middlewares');
-app.use(cors());
+const allowedOrigins = ['https://booyz.netlify.app'];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, // Si vous envoyez des cookies ou des informations d'authentification
+}));
 
 // Middleware de vérification du token JWT sur toutes les routes, sauf /login et /auth_login
 // app.use(verifyToken);
