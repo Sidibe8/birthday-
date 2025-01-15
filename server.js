@@ -20,19 +20,33 @@ db()
 // Utilisation du middleware CORS pour autoriser les requêtes cross-origin
 const cors = require("cors");
 // const { verifyToken } = require('./middlewares');
-const allowedOrigins = ['https://booyz.netlify.app'];
+const allowedOrigins = [
+    "https://booyz.netlify.app",
+    "https://esugu.netlify.app",
+  "https://gestion-esugu.netlify.app", 
+    ];
 
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true, // Si vous envoyez des cookies ou des informations d'authentification
-}));
+    app.use(cors({
+        origin: (origin, callback) => {
+          if (allowedOrigins.includes(origin) || !origin) {
+            callback(null, true);
+          } else {
+            callback(new Error('Not allowed by CORS'));
+          }
+        },
+        credentials: true, // Autoriser les cookies cross-origin
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+      }));
+      
+      // Configuration des en-têtes CORS supplémentaires
+      app.use((req, res, next) => {
+        res.header('Access-Control-Allow-Credentials', 'true');
+        res.header('Access-Control-Allow-Origin', req.headers.origin);
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        next();
+      });
 
 // Middleware de vérification du token JWT sur toutes les routes, sauf /login et /auth_login
 // app.use(verifyToken);
@@ -46,6 +60,11 @@ app.use(cors({
 //     res.render("login")
 // })
 
+app.get('/', (req, res) => {
+    res.send('Bienvenue sur la plateforme de livraison locale !');
+  });
+  
+  
 app.use('/api', router)
 
 app.listen(process.env.port, () => {
